@@ -40,5 +40,5 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
-const TOKEN = 'MTAzMzA1MTAxNTExMDQ4MDAyNA.GhUMVw.x1RrRaLM-kKS3bCJ0BUenWOS1NNrA2jWYHrYQg';
+const TOKEN = '';
 client.login(TOKEN);
