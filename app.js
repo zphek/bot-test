@@ -31,5 +31,5 @@ client.on("messageCreate", async message => {
   });
   
 
-const TOKEN = 'MTAzMzA1MTAxNTExMDQ4MDAyNA.GHUih6.aJBUPjK3v63IgKvZOgJ_l_kN9zgIAmK-n4Q9go';
+const TOKEN = '';
 client.login(TOKEN);
