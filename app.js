@@ -1,4 +1,4 @@
-const { Client, ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } = require('discord.js');
+const { Client, ButtonBuilder, ButtonStyle, ActionRowBuilder, ChannelType } = require('discord.js');
 const client = new Client({ intents: [3276799] });
 
 let ticketCount = 0;
@@ -8,28 +8,37 @@ client.on('ready', () => {
 });
 
 client.on("messageCreate", async message => {
-    if (message.content === '!tk') {
-      const button = new ButtonBuilder()
-        .setLabel("Add ticket")
-        .setStyle(ButtonStyle.Secondary)
-        .setCustomId("ticket-button");
-  
-      const btn = new ActionRowBuilder().addComponents(button);
-  
-      message.reply({content: "¿Desea agregar un ticket?", components: [btn]});
-    }
-  });
-  
-  client.on('interactionCreate', async interaction => {
-    if (!interaction.isButton()) return;
-  
-    const everyone = interaction.guild.roles.cache.find((rol) => rol.name == "@every")
-    if (interaction.customId === 'ticket-button') {
-      ticketCount++;
-      interaction.reply(`Se ha agregado un ticket! ${ticketCount}`);
-    }
-  });
-  
+  if (message.content === '!tk') {
+    const button = new ButtonBuilder()
+      .setLabel("Add ticket")
+      .setStyle(ButtonStyle.Secondary)
+      .setCustomId("ticket-button");
 
-const TOKEN = '';
+    const btn = new ActionRowBuilder().addComponents(button);
+
+    message.reply({content: "¿Desea agregar un ticket?", components: [btn]});
+  }
+});
+
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isButton()) return;
+  if (interaction.customId === 'ticket-button') {
+    ticketCount++;
+    interaction.reply(`Se ha agregado un ticket! ${ticketCount}`);
+
+    let name = `historial-tickets-${new Date().getDate().toLocaleString()}`;
+    let historialChannel = interaction.guild.channels.cache.find(channel => channel.name === name);
+
+    if (!historialChannel) {
+      const guild = interaction.guild;
+      historialChannel = await guild.channels.create({
+        name,
+        type: ChannelType.GuildText
+      });
+    }
+    historialChannel.send(`Nuevo ticket creado por ${interaction.user.tag}. Ticket: ${ticketCount}`);
+  }
+});
+
+const TOKEN = 'MTAzMzA1MTAxNTExMDQ4MDAyNA.GhUMVw.x1RrRaLM-kKS3bCJ0BUenWOS1NNrA2jWYHrYQg';
 client.login(TOKEN);
