@@ -41,44 +41,44 @@ client.on('interactionCreate', async interaction => {
             components: [disabledBtnRow],
         });
 
-        try {
-            const name = `grupo-${interaction.user.username}`;
+        const name = `grupo-${interaction.user.username}`;
+            
+        let historialChannel = await interaction.guild.channels.cache.find(channel => channel.name === name);
+            
+        if (!historialChannel) {
+            const guild = interaction.guild;
+            const adminRole = guild.roles.cache.get('1191785433802231921')
+                
+            //console.log(guild.roles.cache.map(role => `${role.name}: ${role.id}`).join('\n'));
+                
+            //if (!adminRole) throw new Error('El rol "admin" no se encontró.');
         
-            let historialChannel = await interaction.guild.channels.cache.find(channel => channel.name === name);
+            //console.log(adminRole);
 
-            if (!historialChannel) {
-                const guild = interaction.guild;
-                const adminRole = guild.roles.cache.get('1191785433802231921')
-                //console.log(guild.roles.cache.map(role => `${role.name}: ${role.id}`).join('\n'));
-                
-                if (!adminRole) throw new Error('El rol "admin" no se encontró.');
-                
-                console.log(adminRole);
-
-                historialChannel = await guild.channels.create({
-                    name,
-                    type: ChannelType.GuildText,
-                    permissionOverwrites:[
-                        {
-                            id: interaction.user.id,
-                            allow: [PermissionsBitField.Flags.ViewChannel]
-                        },
-                        {
-                            id: adminRole.id,
-                            allow: [PermissionsBitField.Flags.ViewChannel]
-                        },
-                        {
-                            id: guild.roles.everyone,
-                            deny: [PermissionsBitField.Flags.ViewChannel]
-                        }
-                    ]
+            historialChannel = await guild.channels.create({
+                name,
+                type: ChannelType.GuildText,
+                permissionOverwrites:[
+           {                    
+                id: interaction.user.id,
+                allow: [PermissionsBitField.Flags.ViewChannel]
+            },
+            {
+                id: adminRole.id,
+                allow: [PermissionsBitField.Flags.ViewChannel]
+            },
+            {
+                id: guild.roles.everyone,
+                deny: [PermissionsBitField.Flags.ViewChannel]
+            }
+                ]
                 });
             }
             
-            // Resto del código...
-        } catch (error) {
-            console.error(error.message);
-        }
+            interaction.message.edit({
+                content: `Se ha agregado un ticket!`,
+                components: [],
+            });
     }
 });
 
