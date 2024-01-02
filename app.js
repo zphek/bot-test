@@ -1,4 +1,4 @@
-const { Client, ButtonBuilder, ButtonStyle, ActionRowBuilder, ChannelType, EmbedBuilder } = require('discord.js');
+const { Client, ButtonBuilder, ButtonStyle, ActionRowBuilder, ChannelType, EmbedBuilder, PermissionFlagsBits, PermissionsBitField } = require('discord.js');
 const client = new Client({ intents: [3276799] });
 const { token } = require('./config.json');
 
@@ -41,14 +41,24 @@ client.on('interactionCreate', async interaction => {
             components: [disabledBtnRow],
         });
 
-        const name = `grupo-privado`;
+        const name = `grupo-${interaction.user.username}`;
         let historialChannel = await interaction.guild.channels.cache.find(channel => channel.name === name);
 
         if (!historialChannel) {
             const guild = interaction.guild;
             historialChannel = await guild.channels.create({
                 name,
-                type: ChannelType.GuildText
+                type: ChannelType.GuildText,
+                permissionOverwrites:[
+                    {
+                        id: interaction.user.id,
+                        allow: [PermissionsBitField.Flags.ViewChannel]
+                    },
+                    {
+                        id: guild.roles.everyone,
+                        deny: [PermissionsBitField.Flags.ViewChannel]
+                    }
+                ]
             });
         }
     }
