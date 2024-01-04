@@ -81,10 +81,9 @@ client.on('interactionCreate', async interaction => {
                 }
             ]
         });
-
         ticketCreated = true;
 
-        interaction.reply({ content: "¿Desea eliminar el ticket?", components: [deleteBtnRow]});
+        historialChannel.send({ content: "¿Desea eliminar el ticket?", components: [deleteBtnRow]})        
         groupSID.push(historialChannel.id);
     }
 
